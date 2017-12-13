@@ -1,0 +1,9 @@
+---
+applications:
+- name: smokey
+  docker:
+    image: timmow/smokey:tim-paas-hack
+  memory: 1G
+  instances: 1
+  no-route: true
+  health-check-type: process
