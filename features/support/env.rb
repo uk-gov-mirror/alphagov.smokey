@@ -35,23 +35,22 @@ Capybara.app_host = ENV["GOVUK_WEBSITE_ROOT_WITH_AUTH"] || ENV["GOVUK_WEBSITE_RO
 proxy_port = (3222..3229).to_a.sample
 server = BrowserMob::Proxy::Server.new("./bin/browsermob-proxy", port: proxy_port)
 server.start
-proxy = server.create_proxy
+@@proxy = server.create_proxy
 
 # Set up request logging and make it available across all tests
-proxy.new_har
-@@har = proxy.har
+@@proxy.new_har "smokey"
 
 # Add request headers
 if ENV["RATE_LIMIT_TOKEN"]
-  proxy.header({ "Rate-Limit-Token" => ENV["RATE_LIMIT_TOKEN"] })
+  @@proxy.header({ "Rate-Limit-Token" => ENV["RATE_LIMIT_TOKEN"] })
 end
 
 # Blacklist YouTube to prevent cross-site errors
-proxy.blacklist(/^https:\/\/www\.youtube\.com/i, 200)
-proxy.blacklist(/^https:\/\/s\.ytimg\.com/i, 200)
+@@proxy.blacklist(/^https:\/\/www\.youtube\.com/i, 200)
+@@proxy.blacklist(/^https:\/\/s\.ytimg\.com/i, 200)
 
 # Licensify admin doesn't have favicon.ico so block requests to prevent errors
-proxy.blacklist(/^https:\/\/licensify-admin(.*)\.publishing\.service\.gov\.uk\/favicon\.ico$/i, 200)
+@@proxy.blacklist(/^https:\/\/licensify-admin(.*)\.publishing\.service\.gov\.uk\/favicon\.ico$/i, 200)
 
 # Use Chrome in headless mode
 Capybara.register_driver :headless_chrome do |app|
@@ -63,7 +62,7 @@ Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument("--headless")
   options.add_argument("--disable-gpu")
-  options.add_argument(%(--proxy-server="#{proxy.host}:#{proxy.port}"))
+  options.add_argument(%(--proxy-server="#{@@proxy.host}:#{@@proxy.port}"))
 
   Capybara::Selenium::Driver.new(
     app,

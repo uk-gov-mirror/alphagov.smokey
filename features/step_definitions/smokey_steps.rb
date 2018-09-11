@@ -129,8 +129,12 @@ Then /^I should get a (\d+) status code$/ do |expected_status|
   if @response
     actual_status = @response.code.to_i
     url = @response['location']
-  else
-    actual_status = page.status_code.to_i
+  else # Selenium can't give us the status code but the proxy http archive (HAR) has it.
+    har = @@proxy.har
+    require "byebug"; byebug
+    if har.entries.any?
+      actual_status = har.entries.first.response.status
+    end
     url = page.current_url
   end
 
@@ -238,3 +242,4 @@ When /^I see links to pages per topic$/ do
     fail "There are no links on this Services and Information page"
   end
 end
+
