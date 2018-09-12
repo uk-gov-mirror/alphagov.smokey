@@ -130,14 +130,25 @@ Then /^I should get a (\d+) status code$/ do |expected_status|
     actual_status = @response.code.to_i
     url = @response['location']
   else
-    actual_status = page.status_code.to_i
     url = page.current_url
+    actual_status = status_code_from_har(url)
   end
 
   expect(expected_status.to_i).to(
     eq(actual_status),
     "#{url}: expected status #{expected_status.to_i} got #{actual_status}"
   )
+end
+
+# Selenium doesn't support #status_code so inspect the proxy HAR entries
+# for a matching url (the cachebust querystring is our friend) and
+# return the status of the request.
+def status_code_from_har(url)
+  entries = Proxy.service.har.entries
+  if entries.any?
+    entry = entries.find{ |e| e.request.url == url }
+    entry.response.status if entry
+  end
 end
 
 Then /^I should get a "(.*)" header of "(.*)"$/ do |header_name, header_value|
