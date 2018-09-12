@@ -3,6 +3,7 @@ require 'capybara/chromedriver/logger'
 require 'capybara/cucumber'
 require 'nokogiri'
 require 'plek'
+require_relative './proxy'
 require 'selenium-webdriver'
 require 'uri'
 
@@ -30,16 +31,7 @@ end
 ENV["GOVUK_DRAFT_WEBSITE_ROOT"] ||= Plek.new.external_url_for("draft-origin")
 Capybara.app_host = ENV["GOVUK_WEBSITE_ROOT_WITH_AUTH"] || ENV["GOVUK_WEBSITE_ROOT"]
 
-# Set up proxy server (used to manipulate HTTP headers etc since Selenium doesn't
-# support this) on a random port between 3222 and 3229
-proxy_port = (3222..3229).to_a.sample
-server = BrowserMob::Proxy::Server.new("./bin/browsermob-proxy", port: proxy_port)
-server.start
-proxy = server.create_proxy
-
-# Set up request logging and make it available across all tests
-proxy.new_har
-@@har = proxy.har
+proxy = Proxy.service
 
 # Add request headers
 if ENV["RATE_LIMIT_TOKEN"]
@@ -48,6 +40,7 @@ end
 
 # Blacklist YouTube to prevent cross-site errors
 proxy.blacklist(/^https:\/\/www\.youtube\.com/i, 200)
+proxy.blacklist(/^https:\/\/googleads\.g\.doubleclick\.net/i, 200)
 proxy.blacklist(/^https:\/\/s\.ytimg\.com/i, 200)
 
 # Licensify admin doesn't have favicon.ico so block requests to prevent errors
@@ -80,6 +73,7 @@ Capybara.javascript_driver = :headless_chrome
 Capybara::Chromedriver::Logger.raise_js_errors = true
 Capybara::Chromedriver::Logger.filter_levels = %i(debug info warning)
 Capybara::Chromedriver::Logger.filters = [
-  /Failed to load resource/i,
-  /The target origin provided/i,
+  /ERR_CONTENT_LENGTH_MISMATCH/,
+  /Failed to load resource/,
+  /The target origin provided/,
 ]
