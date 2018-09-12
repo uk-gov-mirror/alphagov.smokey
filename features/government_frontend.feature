@@ -5,6 +5,11 @@ Feature: Government Frontend
     And I force a varnish cache miss
 
     @normal
+    Scenario: Visit a page and check the status
+      When I visit "/government/case-studies/out-of-syria-back-into-school"
+      Then I should get a 200 status code
+
+    @normal
     Scenario Outline: Check example pages across formats
       When I request "<Path>"
       Then I should get a 200 status code
