@@ -15,8 +15,8 @@ end
 case ENV["ENVIRONMENT"]
 when "integration"
   ENV["GOVUK_APP_DOMAIN"] ||= "integration.publishing.service.gov.uk"
-  ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www-origin.integration.publishing.service.gov.uk"
-  ENV["GOVUK_WEBSITE_ROOT_WITH_AUTH"] ||= "https://#{basic_auth_credentials}www-origin.integration.publishing.service.gov.uk"
+  ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www.integration.publishing.service.gov.uk"
+  ENV["GOVUK_WEBSITE_ROOT_WITH_AUTH"] ||= "https://#{basic_auth_credentials}www.integration.publishing.service.gov.uk"
 when "staging"
   ENV["GOVUK_APP_DOMAIN"] ||= "staging.publishing.service.gov.uk"
   ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www-origin.staging.publishing.service.gov.uk"
