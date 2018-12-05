@@ -10,14 +10,14 @@ require 'uri'
 # Set up environment
 case ENV["ENVIRONMENT"]
 when "integration"
-  ENV["GOVUK_APP_DOMAIN"] ||= "integration.publishing.service.gov.uk"
-  ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www.integration.publishing.service.gov.uk"
+  ENV["GOVUK_APP_DOMAIN"] = "integration.publishing.service.gov.uk"
+  ENV["GOVUK_WEBSITE_ROOT"] = "https://www.integration.publishing.service.gov.uk"
 when "staging"
-  ENV["GOVUK_APP_DOMAIN"] ||= "staging.publishing.service.gov.uk"
-  ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www.staging.publishing.service.gov.uk"
+  ENV["GOVUK_APP_DOMAIN"] = "staging.publishing.service.gov.uk"
+  ENV["GOVUK_WEBSITE_ROOT"] = "https://www.staging.publishing.service.gov.uk"
 when "production"
-  ENV["GOVUK_APP_DOMAIN"] ||= "publishing.service.gov.uk"
-  ENV["GOVUK_WEBSITE_ROOT"] ||= "https://www.gov.uk"
+  ENV["GOVUK_APP_DOMAIN"] = "publishing.service.gov.uk"
+  ENV["GOVUK_WEBSITE_ROOT"] = "https://www.gov.uk"
 else
   raise "ENVIRONMENT should be one of integration, staging or production"
 end
