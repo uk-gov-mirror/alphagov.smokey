@@ -1,7 +1,7 @@
-@app-hmrc-manuals-api @local-network
-Feature: HMRC Manuals API
+@app-router-api @local-network
+Feature: Router API
   Scenario: Healthcheck
-    Given I am testing "hmrc-manuals-api" internally
+    Given I am testing "router-api" internally
     When I request "/healthcheck/ready"
     Then JSON is returned
     And I should see ""status":"ok""

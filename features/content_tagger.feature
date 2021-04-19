@@ -1,7 +1,7 @@
-@app-hmrc-manuals-api @local-network
-Feature: HMRC Manuals API
+@app-content-tagger @local-network
+Feature: Content Tagger
   Scenario: Healthcheck
-    Given I am testing "hmrc-manuals-api" internally
+    Given I am testing "content-tagger" internally
     When I request "/healthcheck/ready"
     Then JSON is returned
     And I should see ""status":"ok""

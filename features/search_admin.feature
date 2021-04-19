@@ -1,7 +1,7 @@
-@app-hmrc-manuals-api @local-network
-Feature: HMRC Manuals API
+@app-search-admin @local-network
+Feature: Search Admin
   Scenario: Healthcheck
-    Given I am testing "hmrc-manuals-api" internally
+    Given I am testing "search-admin" internally
     When I request "/healthcheck/ready"
     Then JSON is returned
     And I should see ""status":"ok""
